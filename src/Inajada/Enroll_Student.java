@@ -15,16 +15,17 @@ public class Enroll_Student {
         do{
             System.out.println("+----------------------------------------------------------------------------------------------------+");
             System.out.printf("|%-25s%-50s%-25s|\n","","**Manage Student's Enrollment**","");
-            System.out.printf("|%-5s%-95s|\n","","1. Enrol");
-            System.out.printf("|%-5s%-95s|\n","","2. Un-Enrol");
-            System.out.printf("|%-5s%-95s|\n","","3. View");
-            System.out.printf("|%-5s%-95s|\n","","4. Exit");
+            System.out.printf("|%-5s%-95s|\n","","1. Enroll");
+            System.out.printf("|%-5s%-95s|\n","","2. Un-Enroll");
+            System.out.printf("|%-5s%-95s|\n","","3. View Enrolled Student");
+            System.out.printf("|%-5s%-95s|\n","","4. View Un-Enrolled Student");
+            System.out.printf("|%-5s%-95s|\n","","5. Exit");
             System.out.printf("|%-5sEnter Choice: ","");
             int choice;
             while(true){
                 try{
                     choice = input.nextInt();
-                    if(choice>0 && choice<5){
+                    if(choice>0 && choice<6){
                         break;
                     }else{
                         System.out.printf("|%-5sEnter Choice Again: ","");
@@ -44,7 +45,10 @@ public class Enroll_Student {
                     un_enroll();
                     break;
                 case 3:
-                    view();
+                    viewEnrolled();
+                    break;
+                case 4:
+                    viewUnEnrolled();
                     break;
                 default:
                     exit = false;
@@ -187,6 +191,38 @@ public class Enroll_Student {
         String[] tbl_Columns = {"El_Id", "Se_fname", "Se_lname", "Cm_name"};
         conf.viewRecords(tbl_view, tbl_Headers, tbl_Columns);
     }
+    public void viewEnrolled() {
+        System.out.println("+----------------------------------------------------------------------------------------------------+");
+        System.out.printf("|%-25s%-50s%-25s|\n", "", "**Enrolled Student**", "");
+
+        String tbl_view = "SELECT Enrolled_List.El_Id, Enrolled_List.Se_fname, Enrolled_List.Se_lname, "
+                        + "Enrolled_List.Cm_name, Student_List.Se_status "
+                        + "FROM Enrolled_List "
+                        + "JOIN Student_List ON Enrolled_List.Se_Id = Student_List.Se_Id "
+                        + "WHERE Student_List.Se_status = 'Enrolled'";
+
+        String[] tbl_Headers = {"First Name", "Last Name", "Course Name", "Status"};
+        String[] tbl_Columns = {"Se_fname", "Se_lname", "Cm_name", "Se_status"};
+
+        conf.viewRecords(tbl_view, tbl_Headers, tbl_Columns);
+    }
+
+    public void viewUnEnrolled() {
+        System.out.println("+----------------------------------------------------------------------------------------------------+");
+        System.out.printf("|%-25s%-50s%-25s|\n", "", "**Un-Enrolled Student**", "");
+        String tbl_view = "SELECT Enrolled_List.El_Id, Student_List.Se_fname, Student_List.Se_lname, "
+                        + "Enrolled_List.Cm_name, Student_List.Se_status "
+                        + "FROM Student_List "
+                        + "LEFT JOIN Enrolled_List ON Enrolled_List.Se_Id = Student_List.Se_Id "
+                        + "WHERE Student_List.Se_status = 'Un-Enrolled'";
+
+        String[] tbl_Headers = {"First Name", "Last Name", "Status"};
+        String[] tbl_Columns = {"Se_fname", "Se_lname","Se_status"};
+
+        conf.viewRecords(tbl_view, tbl_Headers, tbl_Columns);
+    }
+
+
 
     public void view2(int id){
         try {
